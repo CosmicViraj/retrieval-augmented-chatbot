@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>RAG Chatbot</title>
+</head>
+<body>
+
+<input
+id="question"
+placeholder="Ask question">
+
+<button onclick="ask()">
+Ask
+</button>
+
+<div id="answer"></div>
+
+<script>
+async function ask() {
+    const question = document.getElementById("question").value;
+
+    const response = await fetch("http://localhost:5000/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ question })
+    });
+
+    const data = await response.json();
+
+    document.getElementById("answer").innerHTML = `
+        <h3>Answer</h3>
+        <p>${data.answer || "No answer returned"}</p>
+
+        <h3>Sources</h3>
+        <pre>${(data.sources || []).join("\n\n")}</pre>
+    `;
+}
+</script>
+
+</body>
+</html>

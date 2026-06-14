@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+
+  chroma:
+    image: chromadb/chroma
+    container_name: chroma
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+
+  backend:
+    build: ./backend
+    container_name: rag-backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - chroma
+    environment:
+      - CHROMA_HOST=chroma
+      - CHROMA_PORT=8000
+
+volumes:
+  chroma_data:
